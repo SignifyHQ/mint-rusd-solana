@@ -66,3 +66,61 @@ or
 ```
 yarn airdrop:rusd
 ```
+
+> [!IMPORTANT]
+> you will need some `SOL` to pay the necessary gas fees to request / receive the aidrop.
+
+you can use this script to generate SOL to cover the gas
+```typescript
+import { Connection, Keypair, LAMPORTS_PER_SOL } from "@solana/web3.js";
+import bs58 from "bs58";
+import dotenv from "dotenv";
+
+// Load environment variables
+dotenv.config();
+
+async function getSolAirdrop() {
+  // Get the secret key from environment variables
+  const secretKey = process.env.SECRET_KEY;
+  
+  // Check if secret key exists
+  if (!secretKey) {
+    throw new Error('Must provide a secret key in the "SECRET_KEY" ENV var');
+  }
+  
+  // Derive keypair from secret key
+  const keypair = Keypair.fromSecretKey(bs58.decode(secretKey));
+  
+  // Get public key from the keypair
+  const publicKey = keypair.publicKey;
+  console.log(`Using wallet address: ${publicKey.toString()}`);
+  
+  // Connect to devnet
+  console.log("Connecting to devnet...");
+  const rpcUrl = process.env.RPC_URL || "https://api.devnet.solana.com";
+  const connection = new Connection(rpcUrl, "confirmed");
+  
+  // Check current balance
+  const balanceBefore = await connection.getBalance(publicKey);
+  console.log(`Current balance: ${balanceBefore / LAMPORTS_PER_SOL} SOL`);
+  
+  // Request airdrop (2 SOL should be more than enough)
+  console.log("Requesting 2 SOL from devnet...");
+  const signature = await connection.requestAirdrop(publicKey, 2 * LAMPORTS_PER_SOL);
+  
+  console.log(`Airdrop requested. Signature: ${signature}`);
+  console.log("Confirming transaction...");
+  
+  await connection.confirmTransaction(signature, "confirmed");
+  
+  // Check new balance
+  const balanceAfter = await connection.getBalance(publicKey);
+  console.log(`New balance: ${balanceAfter / LAMPORTS_PER_SOL} SOL`);
+  console.log("Airdrop successful! You can now run the rUSD script.");
+}
+
+getSolAirdrop().catch(error => {
+  console.error("Error:", error);
+  process.exit(1);
+});
+```
