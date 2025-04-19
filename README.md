@@ -67,8 +67,11 @@ or
 yarn airdrop:rusd
 ```
 
+
 > [!IMPORTANT]
 > you will need some `SOL` to pay the necessary gas fees to request / receive the aidrop.
+
+### Get `SOL` to cover gas fees
 
 you can use this script to generate SOL to cover the gas
 ```typescript
