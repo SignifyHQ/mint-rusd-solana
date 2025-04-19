@@ -14,7 +14,7 @@ Modify the  `.env` file and modify:
 
 * **SECRET_KEY:** The base58 encoded secret key of the solana account that is going to send the airdrop transaction and receive the tokens.
 
-* **AMOUNT:** An optional amount of token to receive, if not provided it will be set to 1000 as default. The rUSD token has 6 decimals, to to receive 500 rUSD set the amount variable to 500000000
+* **AMOUNT:** An optional amount of token to receive, if not provided it will be set to 1000 as default. The rUSD token has 6 decimals, to receive 500 rUSD set the amount variable to 500000000
 
 ## Install dependencies
 
